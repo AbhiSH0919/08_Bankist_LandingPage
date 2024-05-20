@@ -31,6 +31,21 @@
           <a class="nav__link nav__link--btn btn--show-modal" href="#acModal">Open account</a>
         </li>
       </ul>
+
+      <!-- MOBILE NAVIGTION BUTTON -->
+      <button class="btn mobile__nav__btn">
+        <i class="nav__icon nav__menu_icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+          </svg>
+        </i>
+
+        <i class="nav__icon nav__close_icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </i>
+      </button>
     </nav>
 
     <div class="header__title">
@@ -66,7 +81,7 @@
         <h5 class="features__header">100% digital bank</h5>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde alias
-          sint quos? Accusantium a fugiat porro reiciendis saepe quibusdam
+          sint quos? Accus antium a fugiat porro reiciendis saepe quibusdam
           debitis ducimus.
         </p>
       </div>
@@ -113,12 +128,11 @@
 
     <div class="operations">
       <div class="operations__tab-container">
-
         <button class="btn operations__tab operations__tab--1 operations__tab--active" data-tab="1">
           <span>01</span>Instant Transfers
         </button>
 
-        <button class="btn operations__tab operations__tab--2" data-tab="2">
+        <button class="btn operations__tab operations__tab--2 margin--horizontal" data-tab="2">
           <span>02</span>Instant Loans
         </button>
 
@@ -177,7 +191,6 @@
           ea commodo consequat.
         </p>
       </div>
-
     </div>
   </section>
 
@@ -215,11 +228,12 @@
             The last step to becoming a complete minimalist
           </h5>
           <blockquote class="testimonial__text">
-            Quisquam itaque deserunt ullam, quia ea repellendus provident,
-            ducimus neque ipsam modi voluptatibus doloremque, corrupti
-            laborum. Incidunt numquam perferendis veritatis neque repellendus.
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo
-            deserunt exercitationem deleniti.
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+            Accusantium quas quisquam non? Quas voluptate nulla minima
+            deleniti optio ullam nesciunt, numquam corporis et asperiores
+            laboriosam sunt, praesentium suscipit blanditiis. alias
+            reiciendis, perferendis facere pariatur dolore veniam autem esse
+            non voluptatem saepe provident nihil molestiae.
           </blockquote>
           <address class="testimonial__author">
             <img src="img/user-2.jpg" alt="" class="testimonial__photo" />
@@ -235,12 +249,12 @@
             Finally free from old-school banks
           </h5>
           <blockquote class="testimonial__text">
-            Debitis, nihil sit minus suscipit magni aperiam vel tenetur
-            incidunt commodi architecto numquam omnis nulla autem,
-            necessitatibus blanditiis modi similique quidem. Odio aliquam
-            culpa dicta beatae quod maiores ipsa minus consequatur error sunt,
-            deleniti saepe aliquid quos inventore sequi. Necessitatibus id
-            alias reiciendis, perferendis facere.
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+            Accusantium quas quisquam non? Quas voluptate nulla minima
+            deleniti optio ullam nesciunt, numquam corporis et asperiores
+            laboriosam sunt, praesentium suscipit blanditiis. Necessitatibus
+            id alias reiciendis, perferendis facere pariatur dolore veniam
+            autem esse non voluptatem saepe provident nihil molestiae.
           </blockquote>
           <address class="testimonial__author">
             <img src="img/user-3.jpg" alt="" class="testimonial__photo" />
@@ -299,8 +313,7 @@
     <p class="footer__copyright">
       &copy; Copyright by
       <a class="footer__link twitter-link" target="_blank" href="https://twitter.com/jonasschmedtman">Jonas Schmedtmann</a>. Use for learning or your
-      portfolio. Don't use to teach. Don't claim
-      as your own product.
+      portfolio.
     </p>
   </footer>
 
@@ -317,6 +330,8 @@
       <input type="text" id="lName" />
       <label for="email">Email Address</label>
       <input type="email" id="email" autocomplete="email" />
+      <label for="password">Pin</label>
+      <input type="password" id="password" />
       <button class="btn">Next step &rarr;</button>
     </form>
   </div>
