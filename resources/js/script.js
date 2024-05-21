@@ -1,11 +1,8 @@
 "use strict";
+import { accounts } from "./accounts.js";
 
 //////////////////////////////////////////////////////////////////////////////
-// Modal window
 
-const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
-const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--show-modal");
 
 const header = document.querySelector(".header");
@@ -21,45 +18,19 @@ mobileNav.addEventListener("click", function (e) {
 	e.preventDefault();
 	nav.classList.toggle("mobile__nav");
 });
-// /////////////////////////////////////////////////////////
-
-const openModal = function (e) {
-	e.preventDefault();
-	modal.classList.remove("hidden");
-	overlay.classList.remove("hidden");
-};
-
-const closeModal = function () {
-	modal.classList.add("hidden");
-	overlay.classList.add("hidden");
-};
-
-btnsOpenModal.forEach((el) => el.addEventListener("click", openModal));
-
-btnCloseModal.addEventListener("click", closeModal);
-overlay.addEventListener("click", closeModal);
-
-document.addEventListener("keydown", function (e) {
-	if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-		closeModal();
-	}
-});
 
 //////////////////////////////////////////////////////////////////////////////
 
-const message = document.createElement("div");
-message.classList.add("cookie-message");
-message.innerHTML = `we are using a cookies! <button class="btn btn--close-cookie">Got it!</button>`;
-header.prepend(message);
-// header.append(message);
-// header.before(message);
-// header.after(message);
-const closeCookies = document.querySelector(".btn--close-cookie");
-message.style.display = "none";
+/* =====INSERT HERE MODAL WINDOW CODE===== */
+// ///////////////////MODAL OPEN////////////////////////
+const openModal = function (e) {
+	e.preventDefault();
+	if (confirm("This window will open in new tab!"))
+		window.open("resources/bankUI/index.html", "_blank");
+};
+btnsOpenModal.forEach((el) => el.addEventListener("click", openModal));
 
-closeCookies.addEventListener("click", function () {
-	message.remove();
-});
+//////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////
 // learn more button scrolling
@@ -236,7 +207,10 @@ const imgObservation = new IntersectionObserver(imgLoad, {
 	rootMargin: "200px 0px 0px 0px",
 });
 
-lazyLoadImgs.forEach((img) => imgObservation.observe(img));
+lazyLoadImgs.forEach((img) => {
+	imgObservation.observe(img);
+	img.classList.add("lazy-img");
+});
 
 //////////////////////////////////////////////////////////////////////////////
 /**
@@ -331,10 +305,10 @@ const sliderSlideShow = function () {
 };
 sliderSlideShow();
 
-document.addEventListener("DOMContentLoaded", function (e) {
-	console.log("dom content load", e);
-});
+// document.addEventListener("DOMContentLoaded", function (e) {
+// 	console.log("dom content load", e);
+// });
 
-window.addEventListener("load", function (e) {
-	console.log("dom content load window event", e);
-});
+// window.addEventListener("load", function (e) {
+// 	console.log("dom content load window event", e);
+// });

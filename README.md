@@ -1,3 +1,3 @@
-# Bankist | When Banking meets Minimalist
+# 08 Bankist | When Banking meets Minimalist
 
 ## 08_Bankist_LandingPage
