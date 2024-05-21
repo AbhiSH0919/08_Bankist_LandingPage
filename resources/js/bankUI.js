@@ -6,7 +6,7 @@
 
 import { accounts, createUserName } from "./accounts.js";
 
-//
+// Elements
 const topNavigation = document.querySelector(".topNavigation");
 const labelWelcome = document.querySelector(".welcome");
 const labelDate = document.querySelector(".date");
@@ -19,24 +19,42 @@ const labelTimer = document.querySelector(".timer");
 const containerApp = document.querySelector(".app");
 const containerMovements = document.querySelector(".movements");
 
-const btnLogin = document.querySelector(".login__btn");
 const btnTransfer = document.querySelector(".form__btn--transfer");
 const btnLoan = document.querySelector(".form__btn--loan");
 const btnClose = document.querySelector(".form__btn--close");
 const btnSort = document.querySelector(".btn--sort");
 
-const login = document.querySelector(".login");
-const inputLoginUsername = document.querySelector(".login__input--user");
-const inputLoginPin = document.querySelector(".login__input--pin");
 const inputTransferTo = document.querySelector(".form__input--to");
 const inputTransferAmount = document.querySelector(".form__input--amount");
+const inputLoanUsername = document.querySelector(".form__input--username");
 const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 let liveTimer;
 let timer;
+/////////////////////////////////////////////////////////////////////////////////////////
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const signUpModal = modal.querySelector(".signUpModal");
+const loginModal = modal.querySelector(".loginModal");
+const firstName = modal.querySelector("#fName");
+const lastName = modal.querySelector("#lName");
+const password = modal.querySelector("#password");
+const initialDeposit = modal.querySelector("#initialDeposit");
 
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////
+
+const openModal = function (e) {
+	modal.classList.remove("hidden");
+	overlay.classList.remove("hidden");
+	signUpModal.style.display = "block";
+	loginModal.style.display = "none";
+};
+
+const closeModal = function () {
+	modal.classList.add("hidden");
+	overlay.classList.add("hidden");
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////
 const updateUI = function (acc) {
@@ -50,12 +68,17 @@ const updateUI = function (acc) {
 	inputTransferTo.blur();
 	inputTransferAmount.blur();
 
-	inputLoginUsername.value = inputLoginPin.value = "";
-	inputLoginUsername.blur();
-	inputLoginPin.blur();
-
-	inputLoanAmount.value = "";
+	inputLoanUsername.value = inputLoanAmount.value = "";
+	inputLoanUsername.blur();
 	inputLoanAmount.blur();
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////
+const logOutFromAc = function () {
+	labelWelcome.innerHTML = `Log in to get started`;
+	topNavigation.style.display = "none";
+	containerApp.style.display = "none";
+	openModal();
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -73,8 +96,7 @@ const logOutTimer = function () {
 				logOutTimer();
 			} else {
 				// hide UI and show message
-				labelWelcome.textContent = `Log in to get started`;
-				containerApp.style.opacity = 0;
+				logOutFromAc();
 			}
 		}
 		time--;
@@ -226,42 +248,9 @@ const summaryDisplayMovements = function () {
 // summaryDisplayMovements(account1.movements);
 
 // ===========================================================
-// inputLoginUsername.value = "ak";
-// inputLoginPin.value = 2244;
 let currentAccount = accounts[2];
-// userName.value = "ak";
-// userPin.value = 2244;
-
-btnLogin.addEventListener("click", function (e) {
-	e.preventDefault();
-
-	currentAccount = accounts.find(
-		(acc) => acc.username === inputLoginUsername.value
-	);
-
-	if (currentAccount?.pin === +inputLoginPin.value) {
-		// UI and message
-		labelWelcome.textContent = `Welcome again, ${
-			currentAccount.owner.split(" ")[0]
-		}`;
-		containerApp.style.opacity = 1;
-
-		// stop log out timer if allredy running & start
-		// if (timer) clearInterval(timer);
-		// logOutTimer();
-
-		// stop live date and time updating if allredy running & start
-		if (liveTimer) clearInterval(liveTimer);
-		updateDateAndTime(currentAccount);
-
-		// update UI
-		updateUI(currentAccount);
-
-		console.log(currentAccount);
-	} else {
-		alert("Invalid Details, Please Check Again!");
-	}
-});
+userName.value = "ak";
+userPin.value = 2244;
 
 // ===========================================================
 btnTransfer.addEventListener("click", function (e) {
@@ -300,6 +289,34 @@ btnTransfer.addEventListener("click", function (e) {
 });
 
 // ===========================================================
+btnClose.addEventListener("click", function (e) {
+	e.preventDefault();
+
+	if (
+		currentAccount.username === inputCloseUsername.value &&
+		currentAccount.pin === +inputClosePin.value
+	) {
+		const index = accounts.findIndex(
+			(acc) => acc.username === inputCloseUsername.value
+		);
+
+		accounts.splice(index, 1);
+		inputCloseUsername.value = inputClosePin.value = "";
+
+		//  hide ui and show login page
+		logOutFromAc();
+
+		// stop log out timer
+		clearInterval(timer);
+
+		// stop live date and time updating
+		clearInterval(liveTimer);
+	} else {
+		alert("Wrong Details, Please Check Again!");
+	}
+});
+
+// ===========================================================
 btnLoan.addEventListener("click", function (e) {
 	e.preventDefault();
 
@@ -327,33 +344,6 @@ btnLoan.addEventListener("click", function (e) {
 });
 
 // ===========================================================
-btnClose.addEventListener("click", function (e) {
-	e.preventDefault();
-
-	if (
-		currentAccount.username === inputCloseUsername.value &&
-		currentAccount.pin === +inputClosePin.value
-	) {
-		const index = accounts.findIndex(
-			(acc) => acc.username === inputCloseUsername.value
-		);
-
-		accounts.splice(index, 1);
-		inputCloseUsername.value = inputClosePin.value = "";
-		containerApp.style.opacity = 0;
-		labelWelcome.textContent = "Log in to get started";
-
-		// stop log out timer
-		clearInterval(timer);
-
-		// stop live date and time updating
-		clearInterval(liveTimer);
-	} else {
-		alert("Wrong Details, Please Check Again!");
-	}
-});
-
-// ===========================================================
 let sorted = 1;
 btnSort.addEventListener("click", function (e) {
 	e.preventDefault();
@@ -362,48 +352,6 @@ btnSort.addEventListener("click", function (e) {
 });
 
 // ===========================================================
-labelBalance.addEventListener("click", function () {
-	const movementsValue = Array.from(
-		document.querySelectorAll(".movements__value"),
-		(el) => +el.textContent.replace("€", "")
-	);
-
-	const movementsValue2 = [
-		...document.querySelectorAll(".movements__value"),
-	].map((el) => +el.textContent.replace("€", ""));
-
-	console.log(movementsValue, movementsValue2);
-});
-
-// // ===========================================================
-// // ===========================================================
-// // ===========================================================
-// // ===========================================================
-
-// /////////////////////////////////////////////////////////
-
-const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
-const signUpModal = modal.querySelector(".signUpModal");
-const loginModal = modal.querySelector(".loginModal");
-const firstName = modal.querySelector("#fName");
-const lastName = modal.querySelector("#lName");
-const password = modal.querySelector("#password");
-const initialDeposit = modal.querySelector("#initialDeposit");
-
-// /////////////////////////////////////////////////////////
-
-const openModal = function (e) {
-	modal.classList.remove("hidden");
-	overlay.classList.remove("hidden");
-	signUpModal.style.display = "block";
-	loginModal.style.display = "none";
-};
-
-const closeModal = function () {
-	modal.classList.add("hidden");
-	overlay.classList.add("hidden");
-};
 
 modal.addEventListener("click", function (e) {
 	e.preventDefault();
@@ -458,12 +406,18 @@ modal.addEventListener("click", function (e) {
 
 		if (currentAccount?.pin === +userPin.value) {
 			// UI and message
-			labelWelcome.textContent = `Welcome again, ${
+			labelWelcome.innerHTML = `Welcome again, ${
 				currentAccount.owner.split(" ")[0]
 			}`;
+
 			closeModal();
-			containerApp.style.opacity = 1;
-			topNavigation.style.opacity = 1;
+
+			topNavigation.style.display = "flex";
+			containerApp.style.display = "grid";
+
+			// stop log out timer if allredy running & start
+			if (timer) clearInterval(timer);
+			logOutTimer();
 
 			// stop live date and time updating if allredy running & start
 			if (liveTimer) clearInterval(liveTimer);

@@ -14,18 +14,18 @@
 </head>
 
 <body>
-
-
   <!-- TOP NAVIGATION -->
   <nav class="topNavigation">
-    <p class="welcome">Log in to get started</p>
-    <img src="../img/logos/logo-dark.png" alt="Logo" class="logo" />
-    <form class="login">
-      <input type="text" placeholder="user" class="login__input login__input--user" />
-      <!-- In practice, use type="password" -->
-      <input type="number" placeholder="PIN" maxlength="4" class="login__input login__input--pin" />
-      <button class="login__btn">&rarr;</button>
-    </form>
+    <div class="greeting">
+      <img src="../img/logos/logo-dark.png" alt="Logo" class="logo" />
+
+      <p class="welcome">
+        Log in to get started
+      </p>
+    </div>
+
+    <!-- LOGOUT TIMER -->
+    <p class="logout-timer">Log out in - <span class="timer">05:00</span></p>
   </nav>
 
   <main class="app">
@@ -56,68 +56,89 @@
       </div>
     </div>
 
+    <div class="operations">
+      <!-- OPERATION: TRANSFERS -->
+      <div class="operation operation--transfer">
+        <h2>Transfer money</h2>
+        <form class="form form--transfer">
+          <div class="form-box">
+            <input type="text" class="form__input form__input--to" />
+            <label class="form__label">Transfer to</label>
+          </div>
+
+          <div class="form-box">
+            <input type="number" class="form__input form__input--amount" />
+            <label class="form__label">Amount</label>
+          </div>
+
+          <button class="form__btn form__btn--transfer">&rarr;</button>
+        </form>
+      </div>
+
+      <!-- OPERATION: LOAN -->
+      <div class="operation operation--loan">
+        <h2>Request loan</h2>
+        <form class="form form--loan">
+          <div class="form-box">
+            <input type="text" class="form__input form__input--username" />
+            <label class="form__label">Confirm user</label>
+          </div>
+
+          <div class="form-box">
+            <input type="number" class="form__input form__input--loan-amount" />
+            <label class="form__label form__label--loan">Amount</label>
+          </div>
+
+          <button class="form__btn form__btn--loan">&rarr;</button>
+        </form>
+      </div>
+
+      <!-- OPERATION: CLOSE -->
+      <div class="operation operation--close">
+        <h2>Close account</h2>
+        <form class="form form--close">
+          <div class="form-box">
+            <input type="text" class="form__input form__input--user" />
+            <label class="form__label">Confirm user</label>
+          </div>
+
+          <div class="form-box">
+            <input type="password" maxlength="6" class="form__input form__input--pin" />
+            <label class="form__label">Confirm PIN</label>
+          </div>
+
+          <button class="form__btn form__btn--close">&rarr;</button>
+        </form>
+      </div>
+    </div>
+
     <!-- SUMMARY -->
     <div class="summary">
-      <p class="summary__label">In</p>
-      <p class="summary__value summary__value--in">0000€</p>
-      <p class="summary__label">Out</p>
-      <p class="summary__value summary__value--out">0000€</p>
-      <p class="summary__label">Interest</p>
-      <p class="summary__value summary__value--interest">0000€</p>
+      <div class="summary-box">
+        <p class="summary__label">In</p>
+        <p class="summary__value summary__value--in">0000€</p>
+      </div>
+
+      <div class="summary-box">
+        <p class="summary__label">Out</p>
+        <p class="summary__value summary__value--out">0000€</p>
+      </div>
+
+      <div class="summary-box">
+        <p class="summary__label">Interest</p>
+        <p class="summary__value summary__value--interest">0000€</p>
+      </div>
+
       <button class="btn--sort">&downarrow; SORT</button>
     </div>
-
-    <!-- OPERATION: TRANSFERS -->
-    <div class="operation operation--transfer">
-      <h2>Transfer money</h2>
-      <form class="form form--transfer">
-        <input type="text" class="form__input form__input--to" />
-        <input type="number" class="form__input form__input--amount" />
-        <button class="form__btn form__btn--transfer">&rarr;</button>
-        <label class="form__label">Transfer to</label>
-        <label class="form__label">Amount</label>
-      </form>
-    </div>
-
-    <!-- OPERATION: LOAN -->
-    <div class="operation operation--loan">
-      <h2>Request loan</h2>
-      <form class="form form--loan">
-        <input type="number" class="form__input form__input--loan-amount" />
-        <button class="form__btn form__btn--loan">&rarr;</button>
-        <label class="form__label form__label--loan">Amount</label>
-      </form>
-    </div>
-
-    <!-- OPERATION: CLOSE -->
-    <div class="operation operation--close">
-      <h2>Close account</h2>
-      <form class="form form--close">
-        <input type="text" class="form__input form__input--user" />
-        <input type="password" maxlength="6" class="form__input form__input--pin" />
-        <button class="form__btn form__btn--close">&rarr;</button>
-        <label class="form__label">Confirm user</label>
-        <label class="form__label">Confirm PIN</label>
-      </form>
-    </div>
-
-    <!-- LOGOUT TIMER -->
-    <p class="logout-timer">
-      You will be logged out in <span class="timer">05:00</span>
-    </p>
   </main>
-
-  <!-- <footer>
-      &copy; by Jonas Schmedtmann. Don't claim as your own :)
-    </footer> -->
-
 
   <!-- =====MODAL WINDOW FOR LOGIN AND NEW ACCOUNT OPEN -->
 
-  <div class="modal " id="acModal">
-
+  <div class="modal" id="acModal">
     <div class="signUpModal">
-      <h2 class="modal__header">Open your bank account <br />
+      <h2 class="modal__header">
+        Open your bank account <br />
         in just <span class="highlight">5 minutes</span>
       </h2>
 
@@ -129,18 +150,23 @@
         <label for="initialDeposit">Deposit</label>
         <input type="number" id="initialDeposit" placeholder="Min - 1000" />
         <label for="password">Pin</label>
-        <input type="number" id="password" placeholder="1234">
+        <input type="number" id="password" placeholder="1234" />
 
         <button class="btn submit__next-btn">Next step &rarr;</button>
 
-        <div class="modal__form__loginBox">If you allredy have an account <button class="btn--text loginModal__link-btn "> Login Now &darr;</button>
+        <div class="modal__form__loginBox">
+          If you allredy have an account
+          <button class="btn--text loginModal__link-btn">
+            Login Now &darr;
+          </button>
         </div>
       </form>
     </div>
 
     <div class="loginModal">
       <h2 class="modal__header">
-        <img src="../img/logos/logo-dark.png" alt="Logo" class="modal__logo" /> Log in to get started
+        <img src="../img/logos/logo-dark.png" alt="Logo" class="modal__logo" />
+        Log in to get started
       </h2>
 
       <form class="modal__form">
@@ -148,19 +174,20 @@
         <input type="text" id="userName" placeholder="jd" />
 
         <label for="userPin">Pin</label>
-        <input type="number" id="userPin" placeholder="1234">
+        <input type="number" id="userPin" placeholder="1234" />
 
         <button class="btn submit__login-btn">Login Now&rarr;</button>
 
-        <div class="modal__form__loginBox">Don't have an account
-          <button class="signUpModal__link-btn btn--text">Open Now &darr;</button>
+        <div class="modal__form__loginBox">
+          Don't have an account
+          <button class="signUpModal__link-btn btn--text">
+            Open Now &darr;
+          </button>
         </div>
       </form>
     </div>
-
   </div>
-  <div class="overlay "></div>
-
+  <div class="overlay"></div>
 
   <script src="../js/bankUI.js" type="module"></script>
 </body>
