@@ -57,20 +57,61 @@ const closeModal = function () {
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
+const createRecords = function (acc) {
+	acc.records = [];
+	acc.movements.forEach((move, i) => {
+		const type = move > 0 ? "deposit" : "withdrawal";
+		const date = new Date(acc.movementsDates[i]);
+		acc.records.push([i + 1, type, move, date]);
+	});
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////
 const updateUI = function (acc) {
+	createRecords(acc);
+
 	printDisplayMovements(acc);
 
 	calcDisplayMovements(acc);
 
 	summaryDisplayMovements.call(acc);
 
-	inputTransferTo.value = inputTransferAmount.value = "";
-	inputTransferTo.blur();
-	inputTransferAmount.blur();
+	clearDisplayInputs();
+};
 
-	inputLoanUsername.value = inputLoanAmount.value = "";
-	inputLoanUsername.blur();
-	inputLoanAmount.blur();
+/////////////////////////////////////////////////////////////////////////////////////////
+const logInToAc = function () {
+	currentAccount = accounts.find(
+		(acc) => acc.username === userName.value && acc.pin === +userPin.value
+	);
+
+	if (currentAccount?.pin === +userPin.value) {
+		// UI and message
+		labelWelcome.innerHTML = `Welcome again, ${
+			currentAccount.owner.split(" ")[0]
+		}`;
+
+		userName.value = userPin.value = "";
+		closeModal();
+
+		topNavigation.style.display = "flex";
+		containerApp.style.display = "grid";
+
+		// stop log out timer if allredy running & start
+		if (timer) clearInterval(timer);
+		logOutTimer();
+
+		// stop live date and time updating if allredy running & start
+		if (liveTimer) clearInterval(liveTimer);
+		updateDateAndTime(currentAccount);
+
+		// update UI
+		updateUI(currentAccount);
+
+		console.log(currentAccount);
+	} else {
+		alert("Invalid Details, Please Check Again!");
+	}
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +119,13 @@ const logOutFromAc = function () {
 	labelWelcome.innerHTML = `Log in to get started`;
 	topNavigation.style.display = "none";
 	containerApp.style.display = "none";
+	clearDisplayInputs();
+
+	// stop log out timer
+	clearInterval(timer);
+
+	// stop live date and time updating
+	clearInterval(liveTimer);
 	openModal();
 };
 
@@ -136,7 +184,7 @@ const updateDateAndTime = function (acc) {
 
 		labelDate.textContent = timeformat;
 	};
-	dateAndTime();
+	// dateAndTime(); // INITIAL CALL
 	liveTimer = setInterval(() => dateAndTime(), 1000);
 };
 
@@ -178,26 +226,25 @@ const printDisplayMovements = function (acc, sort = 1) {
 	containerMovements.innerHTML = "";
 	let movs;
 	if (sort === 2) {
-		movs = acc.movements.slice().sort((a, b) => a - b);
+		movs = acc.records.slice().sort((a, b) => a[2] - b[2]);
 	} else if (sort === 3) {
-		movs = acc.movements.slice().sort((a, b) => b - a);
+		movs = acc.records.slice().sort((a, b) => b[2] - a[2]);
 		sorted = 0;
 	} else {
-		movs = acc.movements;
+		movs = acc.records;
 	}
 
 	movs.forEach((move, i) => {
-		// ===========================================================
+		// DISPLAY MOVEMENTS WITH DATE AND TYPES
 
-		// ===========================================================
-		const type = move > 0 ? "deposit" : "withdrawal";
-		const date = new Date(acc.movementsDates[i]);
-		const displayDate = formatMovementDates(date, acc.locale);
-		const formatedMov = formatCur(move, acc.locale, acc.currency);
+		const [indexRecord, typeRecord, moveRecord, dateRecord] = movs[i];
+
+		const displayDate = formatMovementDates(dateRecord, acc.locale);
+		const formatedMov = formatCur(moveRecord, acc.locale, acc.currency);
 
 		const html = `
     <div class="movements__row">
-    <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+    <div class="movements__type movements__type--${typeRecord}">${indexRecord} ${typeRecord}</div>
     <div class="movements__date">${displayDate}</div>
     <div class="movements__value">${formatedMov}</div>
     </div>
@@ -247,6 +294,17 @@ const summaryDisplayMovements = function () {
 };
 // summaryDisplayMovements(account1.movements);
 
+/////////////////////////////////////////////////////////////////////////////////////////
+const clearDisplayInputs = function () {
+	inputTransferTo.value = inputTransferAmount.value = "";
+	inputTransferTo.blur();
+	inputTransferAmount.blur();
+
+	inputLoanUsername.value = inputLoanAmount.value = "";
+	inputLoanUsername.blur();
+	inputLoanAmount.blur();
+};
+
 // ===========================================================
 let currentAccount = accounts[2];
 userName.value = "ak";
@@ -289,6 +347,34 @@ btnTransfer.addEventListener("click", function (e) {
 });
 
 // ===========================================================
+btnLoan.addEventListener("click", function (e) {
+	e.preventDefault();
+
+	const loanAmount = Math.floor(inputLoanAmount.value);
+
+	if (
+		loanAmount > 0 &&
+		currentAccount.username === inputLoanUsername.value &&
+		currentAccount.movements.some((move) => move > loanAmount * 0.1)
+	) {
+		// add amount in current account
+		currentAccount.movements.push(loanAmount);
+
+		// add live date or time
+		currentAccount.movementsDates.push(new Date().toISOString());
+
+		// stop log out timer if allredy running & start
+		if (timer) clearInterval(timer);
+		logOutTimer();
+
+		// update UI
+		updateUI(currentAccount);
+	} else {
+		alert("Wrong Details, Please Check Again!");
+	}
+});
+
+// ===========================================================
 btnClose.addEventListener("click", function (e) {
 	e.preventDefault();
 
@@ -305,41 +391,8 @@ btnClose.addEventListener("click", function (e) {
 
 		//  hide ui and show login page
 		logOutFromAc();
-
-		// stop log out timer
-		clearInterval(timer);
-
-		// stop live date and time updating
-		clearInterval(liveTimer);
 	} else {
 		alert("Wrong Details, Please Check Again!");
-	}
-});
-
-// ===========================================================
-btnLoan.addEventListener("click", function (e) {
-	e.preventDefault();
-
-	const loanAmount = Math.floor(inputLoanAmount.value);
-
-	if (
-		loanAmount > 0 &&
-		currentAccount.movements.some((move) => move > loanAmount * 0.1)
-	) {
-		// add amount in current account
-		currentAccount.movements.push(loanAmount);
-
-		// add live date or time
-		currentAccount.movementsDates.push(new Date().toISOString());
-
-		// stop log out timer if allredy running & start
-		if (timer) clearInterval(timer);
-		logOutTimer();
-
-		// update UI
-		updateUI(currentAccount);
-	} else {
-		alert("Amount is high!");
 	}
 });
 
@@ -352,6 +405,11 @@ btnSort.addEventListener("click", function (e) {
 });
 
 // ===========================================================
+labelTimer.nextElementSibling.addEventListener("click", function () {
+	if (confirm("You will be logged out!")) logOutFromAc();
+});
+
+// // ===========================================================
 
 modal.addEventListener("click", function (e) {
 	e.preventDefault();
@@ -363,7 +421,7 @@ modal.addEventListener("click", function (e) {
 			+initialDeposit.value < 1000 ||
 			password.value.length < 1
 		) {
-			alert("Please fill the form! \n minimum deposit 1000");
+			alert("Please fill the form!\nMinimum Deposit 1000");
 			return;
 		} else {
 			if (confirm("Continue to open Account!")) {
@@ -400,36 +458,7 @@ modal.addEventListener("click", function (e) {
 	}
 
 	if (e.target.classList.contains("submit__login-btn")) {
-		currentAccount = accounts.find(
-			(acc) => acc.username === userName.value && acc.pin === +userPin.value
-		);
-
-		if (currentAccount?.pin === +userPin.value) {
-			// UI and message
-			labelWelcome.innerHTML = `Welcome again, ${
-				currentAccount.owner.split(" ")[0]
-			}`;
-
-			closeModal();
-
-			topNavigation.style.display = "flex";
-			containerApp.style.display = "grid";
-
-			// stop log out timer if allredy running & start
-			if (timer) clearInterval(timer);
-			logOutTimer();
-
-			// stop live date and time updating if allredy running & start
-			if (liveTimer) clearInterval(liveTimer);
-			updateDateAndTime(currentAccount);
-
-			// update UI
-			updateUI(currentAccount);
-
-			console.log(currentAccount);
-		} else {
-			alert("Invalid Details, Please Check Again!");
-		}
+		logInToAc();
 	}
 
 	if (e.target.classList.contains("signUpModal__link-btn")) openModal();

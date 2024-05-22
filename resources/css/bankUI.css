@@ -74,10 +74,25 @@ nav {
 	font-size: 1.6rem;
 	padding: 0 0.3rem;
 	margin-left: auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5rem;
 }
 
 .timer {
 	font-weight: 600;
+}
+
+.logout-timer .log-out-btn {
+	padding: 1rem;
+	margin-left: 1rem;
+}
+
+.logout-timer svg {
+	height: 2.7rem;
+	width: 2.7rem;
+	fill: #fd424b;
 }
 
 /* MAIN */
@@ -444,9 +459,6 @@ h2 {
 	body {
 		padding: 2rem 1rem;
 	}
-	nav {
-		padding: 0;
-	}
 
 	.app {
 		grid-template-columns: repeat(1, minmax(15rem, 1fr));
@@ -489,6 +501,7 @@ h2 {
 		align-items: center;
 		gap: 2rem;
 	}
+
 	.balance__label {
 		font-size: 2rem;
 	}
